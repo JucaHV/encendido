@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Control LED</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control LED</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
-	<h1>On/Off Control</h1>
+    <h1>Control LED</h1>
+    
+    <input type="button" onClick="switchOn()" value="ENCENDER" style="padding: 10px 20px; font-size: 16px;"/>
+    <input type="button" onClick="switchOff()" value="APAGAR" style="padding: 10px 20px; font-size: 16px;"/>
 
-	<input type="button" onClick="switchOn()" value="ON" style="padding: 10px 20px; font-size: 16px;" />
-	<input type="button" onClick="switchOff()" value="OFF" style="padding: 10px 20px; font-size: 16px;" />
+    <script>
+        var accessToken = "bd54bd5de61c56482602fc9ec7cce2cefb805fb3";
+        var deviceID = "0a10aced202194944a055ca4";
+        var url = "https://api.particle.io/v1/devices/" + deviceID + "/led";
 
-	<script>
-		// Ocultar el token en un entorno real (esto es solo para ejemplo)
-		var accessToken = "bd54bd5de61c56482602fc9ec7cce2cefb805fb3";
-		var deviceID = "0a10aced202194944a055ca4";
-		var url = "https://api.particle.io/v1/devices/" + deviceID + "/led";
+        // Función para traducir el return_value a un mensaje entendible
+        function getStatusMessage(returnValue) {
+            if (returnValue === 1) return "Se encendió correctamente";
+            if (returnValue === 0) return "Se apagó correctamente";
+            return "Estado desconocido (valor: " + returnValue + ")";
+        }
 
-		function switchOn() {
-			$.post(url, { params: "on", access_token: accessToken })
-				.done(function () { alert("Encendido correctamente"); })
-				.fail(function () { alert("Error al encender"); });
-		}
+        function switchOn() {
+            $.post(url, { params: "on", access_token: accessToken })
+                .done(function(response) {
+                    const message = getStatusMessage(response.return_value);
+                    alert("Comando enviado: " + message);
+                })
+                .fail(function(error) {
+                    alert("Error al encender: " + (error.responseJSON?.error || "Verifica tu conexión"));
+                });
+        }
 
-		function switchOff() {
-			$.post(url, { params: "off", access_token: accessToken })
-				.done(function () { alert("Apagado correctamente"); })
-				.fail(function () { alert("Error al apagar"); });
-		}
-	</script>
+        function switchOff() {
+            $.post(url, { params: "off", access_token: accessToken })
+                .done(function(response) {
+                    const message = getStatusMessage(response.return_value);
+                    alert("Comando enviado: " + message);
+                })
+                .fail(function(error) {
+                    alert("Error al apagar: " + (error.responseJSON?.error || "Verifica tu conexión"));
+                });
+        }
+    </script>
 </body>
 </html>
