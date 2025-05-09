@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Control LED</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+	<h1>On/Off Control</h1>
+
+	<input type="button" onClick="switchOn()" value="ON" style="padding: 10px 20px; font-size: 16px;" />
+	<input type="button" onClick="switchOff()" value="OFF" style="padding: 10px 20px; font-size: 16px;" />
+
+	<script>
+		// Ocultar el token en un entorno real (esto es solo para ejemplo)
+		var accessToken = "bd54bd5de61c56482602fc9ec7cce2cefb805fb3";
+		var deviceID = "0a10aced202194944a055ca4";
+		var url = "https://api.particle.io/v1/devices/" + deviceID + "/led";
+
+		function switchOn() {
+			$.post(url, { params: "on", access_token: accessToken })
+				.done(function () { alert("Encendido correctamente"); })
+				.fail(function () { alert("Error al encender"); });
+		}
+
+		function switchOff() {
+			$.post(url, { params: "off", access_token: accessToken })
+				.done(function () { alert("Apagado correctamente"); })
+				.fail(function () { alert("Error al apagar"); });
+		}
+	</script>
+</body>
+</html>
